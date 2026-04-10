@@ -1,0 +1,239 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole__1 = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserRole = 
+ variant {
+   buyer;
+   seller;
+ };
+type UserProfile = 
+ record {
+   addresses: vec Address;
+   createdAt: Timestamp;
+   displayName: text;
+   id: UserId;
+   phone: text;
+   role: UserRole;
+   updatedAt: Timestamp;
+ };
+type UserId = principal;
+type UpdateProductInput = 
+ record {
+   category: Category;
+   currency: text;
+   deliveryEstimate: text;
+   description: text;
+   id: ProductId;
+   images: vec ExternalBlob;
+   isActive: bool;
+   price: nat;
+   stock: nat;
+   title: text;
+ };
+type UpdateCartItemInput = 
+ record {
+   productId: ProductId;
+   quantity: nat;
+ };
+type Timestamp = int;
+type SaveProfileInput = 
+ record {
+   displayName: text;
+   phone: text;
+   role: UserRole;
+ };
+type ProductId = nat;
+type ProductFilter = 
+ record {
+   category: opt Category;
+   inStockOnly: bool;
+   keyword: opt text;
+   maxPrice: opt nat;
+   minPrice: opt nat;
+   minRating: opt float64;
+ };
+type Product = 
+ record {
+   category: Category;
+   createdAt: Timestamp;
+   currency: text;
+   deliveryEstimate: text;
+   description: text;
+   id: ProductId;
+   images: vec ExternalBlob;
+   isActive: bool;
+   price: nat;
+   rating: float64;
+   sellerId: UserId;
+   stock: nat;
+   title: text;
+   updatedAt: Timestamp;
+ };
+type PlaceOrderInput = 
+ record {
+   deliveryAddress: DeliveryAddress;
+   items: vec record {
+                productId: ProductId;
+                quantity: nat;
+              };
+   paymentMethod: PaymentMethod;
+ };
+type PaymentMethod = 
+ variant {
+   card;
+   cashOnDelivery;
+   upi;
+ };
+type OrderStatus = 
+ variant {
+   cancelled;
+   confirmed;
+   delivered;
+   outForDelivery;
+   pending;
+   shipped;
+ };
+type OrderItem = 
+ record {
+   priceAtOrder: nat;
+   productId: ProductId;
+   quantity: nat;
+   title: text;
+ };
+type OrderId = nat;
+type Order = 
+ record {
+   buyerId: UserId;
+   createdAt: Timestamp;
+   deliveryAddress: DeliveryAddress;
+   estimatedDelivery: text;
+   id: OrderId;
+   items: vec OrderItem;
+   paymentMethod: PaymentMethod;
+   sellerId: UserId;
+   status: OrderStatus;
+   total: nat;
+   updatedAt: Timestamp;
+ };
+type ExternalBlob = blob;
+type DeliveryAddress = 
+ record {
+   addressLine1: text;
+   addressLine2: text;
+   city: text;
+   name: text;
+   phone: text;
+   pincode: text;
+   state: text;
+ };
+type CreateProductInput = 
+ record {
+   category: Category;
+   currency: text;
+   deliveryEstimate: text;
+   description: text;
+   images: vec ExternalBlob;
+   price: nat;
+   stock: nat;
+   title: text;
+ };
+type Category = 
+ variant {
+   books;
+   clothes;
+   electronics;
+   essentials;
+   groceries;
+   others;
+ };
+type CartItem = 
+ record {
+   priceAtAdd: nat;
+   productId: ProductId;
+   quantity: nat;
+ };
+type Cart = 
+ record {
+   buyerId: UserId;
+   items: vec CartItem;
+   totalAmount: nat;
+ };
+type Address = 
+ record {
+   addressLine1: text;
+   addressLine2: text;
+   city: text;
+   id: nat;
+   isDefault: bool;
+   name: text;
+   phone: text;
+   pincode: text;
+   state: text;
+ };
+type AddAddressInput = 
+ record {
+   addressLine1: text;
+   addressLine2: text;
+   city: text;
+   isDefault: bool;
+   name: text;
+   phone: text;
+   pincode: text;
+   state: text;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addAddress: (input: AddAddressInput) -> (Address);
+  addToCart: (productId: ProductId, quantity: nat) -> (Cart);
+  assignCallerUserRole: (user: principal, role: UserRole__1) -> ();
+  cancelOrder: (orderId: OrderId) -> (Order);
+  clearCart: () -> ();
+  createProduct: (input: CreateProductInput) -> (Product);
+  deleteAddress: (addressId: nat) -> ();
+  deleteProduct: (productId: ProductId) -> ();
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole__1) query;
+  getCart: () -> (Cart) query;
+  getMyOrders: () -> (vec Order) query;
+  getMySellerOrders: () -> (vec Order) query;
+  getOrder: (orderId: OrderId) -> (opt Order) query;
+  getProduct: (productId: ProductId) -> (opt Product) query;
+  getUserProfile: (userId: principal) -> (opt UserProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  listMyProducts: () -> (vec Product) query;
+  listProducts: (filterOpts: ProductFilter) -> (vec Product) query;
+  placeOrder: (input: PlaceOrderInput) -> (vec Order);
+  removeFromCart: (productId: ProductId) -> (Cart);
+  reorder: (orderId: OrderId) -> (Cart);
+  saveCallerUserProfile: (input: SaveProfileInput) -> ();
+  setDefaultAddress: (addressId: nat) -> ();
+  updateAddress: (addressId: nat, input: AddAddressInput) -> (Address);
+  updateCartItem: (input: UpdateCartItemInput) -> (Cart);
+  updateOrderStatus: (orderId: OrderId, status: OrderStatus) -> (Order);
+  updateProduct: (input: UpdateProductInput) -> (Product);
+}

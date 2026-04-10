@@ -1,0 +1,25 @@
+{
+  "overview": "An all-in-one e-commerce marketplace combining general shopping (like Flipkart) and quick-commerce/grocery delivery (like Zepto). Buyers can browse products, add to cart, checkout, and track orders. Sellers can list products, manage inventory, and fulfill orders — all in one platform.",
+  "features": [
+    "Product catalog with search, filters, and category browsing",
+    "Shopping cart with persistent sessions and full checkout flow",
+    "Seller dashboard for product and order management with image uploads",
+    "Buyer order history with status tracking and reorder",
+    "Role-based access for Buyers and Sellers",
+    "Indian UX — Rupee pricing, local address fields, familiar categories"
+  ],
+  "category": "productivity",
+  "tags": [
+    "e-commerce",
+    "marketplace",
+    "flipkart",
+    "zepto",
+    "seller",
+    "buyer",
+    "shopping",
+    "cart",
+    "order-tracking",
+    "india"
+  ],
+  "last_updated": "2026-04-10T11:03:12.779Z"
+}

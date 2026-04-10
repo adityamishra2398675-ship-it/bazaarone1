@@ -1,0 +1,150 @@
+// Version: 1.0.0
+type Address__274428118 =
+  {
+    addressLine1 : Text;
+    addressLine2 : Text;
+    city : Text;
+    id : Nat;
+    isDefault : Bool;
+    name : Text;
+    phone : Text;
+    pincode : Text;
+    state : Text
+  };
+type CartItem__1044444615 =
+  {priceAtAdd : Nat; productId : ProductId__593108714; quantity : Nat};
+type Cart__949090555 =
+  {
+    buyerId : UserId__445290797;
+    items : [CartItem__1044444615];
+    totalAmount : Nat
+  };
+type Category__8224233 = Category__936342486;
+type Category__936342486 =
+  {#books; #clothes; #electronics; #essentials; #groceries; #others};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DeliveryAddress__677077764 =
+  {
+    addressLine1 : Text;
+    addressLine2 : Text;
+    city : Text;
+    name : Text;
+    phone : Text;
+    pincode : Text;
+    state : Text
+  };
+type ExternalBlob__246066408 = Blob;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OrderId__197865225 = Nat;
+type OrderId__521176343 = OrderId__197865225;
+type OrderItem__241319351 =
+  {
+    priceAtOrder : Nat;
+    productId : ProductId__903190681;
+    quantity : Nat;
+    title : Text
+  };
+type OrderStatus__272730104 = OrderStatus__393009242;
+type OrderStatus__393009242 =
+  {#cancelled; #confirmed; #delivered; #outForDelivery; #pending; #shipped};
+type Order__141779993 =
+  {
+    buyerId : UserId__41638867;
+    createdAt : Timestamp__813860109;
+    deliveryAddress : DeliveryAddress__677077764;
+    estimatedDelivery : Text;
+    id : OrderId__521176343;
+    items : [OrderItem__241319351];
+    paymentMethod : PaymentMethod__972042942;
+    sellerId : UserId__41638867;
+    status : OrderStatus__272730104;
+    total : Nat;
+    updatedAt : Timestamp__813860109
+  };
+type PaymentMethod__46913440 = {#card; #cashOnDelivery; #upi};
+type PaymentMethod__972042942 = PaymentMethod__46913440;
+type ProductId__160010635 = Nat;
+type ProductId__442338476 = ProductId__160010635;
+type ProductId__593108714 = ProductId__160010635;
+type ProductId__903190681 = ProductId__160010635;
+type Product__750902660 =
+  {
+    category : Category__8224233;
+    createdAt : Timestamp__77860887;
+    currency : Text;
+    deliveryEstimate : Text;
+    description : Text;
+    id : ProductId__442338476;
+    images : [ExternalBlob__246066408];
+    isActive : Bool;
+    price : Nat;
+    rating : Float;
+    sellerId : UserId__200281261;
+    stock : Nat;
+    title : Text;
+    updatedAt : Timestamp__77860887
+  };
+type Timestamp__301639476 = Int;
+type Timestamp__778030842 = Timestamp__301639476;
+type Timestamp__77860887 = Timestamp__301639476;
+type Timestamp__813860109 = Timestamp__301639476;
+type UserId__1043627770 = UserId__158757552;
+type UserId__158757552 = Principal;
+type UserId__200281261 = UserId__158757552;
+type UserId__41638867 = UserId__158757552;
+type UserId__445290797 = UserId__158757552;
+type UserProfile__277265826 =
+  {
+    addresses : [Address__274428118];
+    createdAt : Timestamp__778030842;
+    displayName : Text;
+    id : UserId__1043627770;
+    phone : Text;
+    role : UserRole__41952412;
+    updatedAt : Timestamp__778030842
+  };
+type UserRole__1054455867 = {#admin; #guest; #user};
+type UserRole__41952412 = UserRole__451090586;
+type UserRole__451090586 = {#buyer; #seller};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable carts :
+    {
+      var root : Node__46230540<Principal, Cart__949090555>;
+      var size : Nat__490723111
+    };
+  stable nextAddressId : {var value : Nat};
+  stable nextOrderId : {var value : Nat};
+  stable nextProductId : {var value : Nat};
+  stable orders :
+    {
+      var root : Node__46230540<Nat, Order__141779993>;
+      var size : Nat__490723111
+    };
+  stable products :
+    {
+      var root : Node__46230540<Nat, Product__750902660>;
+      var size : Nat__490723111
+    };
+  stable profiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__277265826>;
+      var size : Nat__490723111
+    };
+  stable seeded : {var done : Bool}
+};
